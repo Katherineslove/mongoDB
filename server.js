@@ -1,9 +1,14 @@
-
 const express = require('express');
 const app = express();
 const port = 3000;
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const allProducts = require('./data/products');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(cors());
 
 app.use(function(req, res, next){
   console.log(`${req.method} request for ${req.url}`);
@@ -50,6 +55,17 @@ app.get('/products/delete/:id', function(req, res) {
   }
   res.send(filteredData)
 });
+
+app.post('/product', function(req, res) {
+  // console.log('a post request has been made');
+  console.log(req.body);
+  let product = {
+    name: req.body.name,
+    price: req.body.price,
+    message: "we are about to send this product to our database"
+  }
+  res.send(product);
+})
 
 app.listen(port, () => {
     console.clear();
