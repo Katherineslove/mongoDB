@@ -7,6 +7,9 @@ const mongoose = require('mongoose');
 
 const config = require('./config.json')
 
+const Product = require('./models/products');
+
+
 mongoose.connect(`mongodb+srv://katherineslove:${config.MONGO_PASSWORD}@cluster0-iro24.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
 
 var db = mongoose.connection;
@@ -32,43 +35,20 @@ app.get('/', function(req, res){
 });
 
 app.get('/all', function(req, res) {
-  res.send(allProducts);
+  // res.send(allProducts);
+  Product.find().then(result =>{
+    res.send(result)
+  })
 });
 
 app.get('/products/:id', function(req, res) {
-  const oneProduct = req.params.id;
-  let filteredData = [];
-  for (var i = 0; i < allProducts.length; i++) {
-    if (allProducts[i].id.toString() === oneProduct) {
-      filteredData.push(allProducts[i]);
-    }
-  }
-  res.send(filteredData)
+    const id = req.params.id;
+
+    Product.findById(id, function (err, product) {
+      res.send(product)
+    });
 });
 
-app.get('/products/edit/:id', function(req, res) {
-  const oneProduct = req.params.id;
-  let filteredData = [];
-  for (var i = 0; i < allProducts.length; i++) {
-    if (allProducts[i].id.toString() === oneProduct) {
-      filteredData.push(allProducts[i]);
-    }
-  }
-  res.send(filteredData)
-});
-
-app.get('/products/delete/:id', function(req, res) {
-  const oneProduct = req.params.id;
-  let filteredData = [];
-  for (var i = 0; i < allProducts.length; i++) {
-    if (allProducts[i].id.toString() === oneProduct) {
-      filteredData.push(allProducts[i]);
-    }
-  }
-  res.send(filteredData)
-});
-
-const Product = require('./models/products');
 
 app.post('/product', function(req, res) {
   // console.log('a post request has been made');
@@ -85,7 +65,6 @@ app.post('/product', function(req, res) {
     name: req.body.name,
     price: req.body.price
   });
-  
   product.save().then(result => {
     res.send(result);
   })
