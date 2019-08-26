@@ -71,6 +71,19 @@ app.post('/product', function(req, res) {
   .catch(err => res.send(err));
 });
 
+app.patch('/editProduct/:id', function(req, res) {
+  const id = req.params.id;
+  const newProduct = {
+    name: req.body.name,
+    price: req.body.price
+  }
+  Product.updateOne({_id: id}, newProduct).then(results => {
+    res.send(result);
+  }).catch(err => res.send(err));
+})
+
+
+
 app.listen(port, () => {
     console.clear();
     console.log(`application is running on port ${port}`)
