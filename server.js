@@ -82,6 +82,14 @@ app.patch('/editProduct/:id', function(req, res) {
   }).catch(err => res.send(err));
 })
 
+app.delete('/products/:id', function(req, res) {
+  console.log('here');
+  res.send('here')
+  const id = req.params.id;
+  Product.deleteOne({_id: id}).then(results => {
+    res.send('deleted');
+  }).catch(err => res.send(err));
+})
 
 
 app.listen(port, () => {
