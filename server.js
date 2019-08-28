@@ -4,6 +4,7 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const config = require('./config.json')
 
@@ -51,15 +52,6 @@ app.get('/products/:id', function(req, res) {
 
 
 app.post('/product', function(req, res) {
-  // console.log('a post request has been made');
-  // console.log(req.body);
-  // let product = {
-  //   name: req.body.name,
-  //   price: req.body.price,
-  //   message: "we are about to send this product to our database"
-  // }
-  // res.send(product);
-
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
@@ -93,13 +85,23 @@ app.delete('/products/:id', function(req, res) {
 
 app.post('/users', function(req, res) {
   console.log('here');
-  const userRego = {
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password,
-  };
-console.log(userRego);
+  const hash = bcrypt.hashSync(req.body.password);
+  // const userRego = {
+  //   username: req.body.username,
+  //   email: req.body.email,
+  //   password: req.body.password,
+  // };
+  console.log(hash);
+  res.send('here')
 });
+
+app.post('/getUser', function(req, res) {
+  // if(bcrypt.compareSync('password', hash)) {
+  //   console.log('password matches');
+  // } else {
+  //   console.log('password does not match');
+  // }
+})
 
 app.listen(port, () => {
     console.clear();
