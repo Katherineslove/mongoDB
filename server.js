@@ -91,7 +91,15 @@ app.delete('/products/:id', function(req, res) {
   }).catch(err => res.send(err));
 })
 
-// app.post('/users/')
+app.post('/users', function(req, res) {
+  console.log('here');
+  const userRego = {
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+  };
+console.log(userRego);
+});
 
 app.listen(port, () => {
     console.clear();
