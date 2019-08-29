@@ -108,22 +108,17 @@ app.post('/users', function(req, res) {
 });
 
 app.post('/getUser', function(req, res) {
-  // if(bcrypt.compareSync('password', hash)) {
-  //   console.log('password matches');
-  // } else {
-  //   console.log('password does not match');
-  // }
-
-  console.log(req.body.username);
-  console.log(req.body.password);
-
-
   User.findOne({ username: req.body.username}, function(err, getUser) {
     if (getUser){
-      console.log('you are good to go');
-      res.send(getUser);
+      if(bcrypt.compareSync(req.body.password, getUser.password)) {
+        console.log('password matches');
+        res.send(getUser);
+      } else {
+        console.log('password does not match');
+        res.send('invalid password')
+      }
     } else {
-      res.send('there is noone with this username please register first');
+      res.send('invalid user');
     }
   });
 
