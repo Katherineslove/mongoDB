@@ -86,18 +86,25 @@ app.delete('/products/:id', function(req, res) {
 })
 
 app.post('/users', function(req, res) {
-  console.log('here');
-  const hash = bcrypt.hashSync(req.body.password);
-  const user = new User({
-    _id: new mongoose.Types.ObjectId(),
-    username: req.body.username,
-    email: req.body.email,
-    password: hash,
-  });
+    User.findOne({ username: req.body.username}, function(err, checkUser) {
+      // res.send(checkUser);
+      if (checkUser){
+        console.log('try again');
+        res.send(checkUser);
+      } else {
+        const hash = bcrypt.hashSync(req.body.password);
+        const user = new User({
+          _id: new mongoose.Types.ObjectId(),
+          username: req.body.username,
+          email: req.body.email,
+          password: hash,
+        });
 
-  user.save().then(result => {
-    res.send(result);
-  })  .catch(err => res.send(err));
+        user.save().then(result => {
+          res.send(result);
+        })  .catch(err => res.send(err));
+      }
+    });
 });
 
 app.post('/getUser', function(req, res) {
@@ -106,7 +113,21 @@ app.post('/getUser', function(req, res) {
   // } else {
   //   console.log('password does not match');
   // }
-})
+
+  console.log(req.body.username);
+  console.log(req.body.password);
+
+
+  User.findOne({ username: req.body.username}, function(err, getUser) {
+    if (getUser){
+      console.log('you are good to go');
+      res.send(getUser);
+    } else {
+      res.send('there is noone with this username please register first');
+    }
+  });
+
+});
 
 app.listen(port, () => {
     console.clear();
